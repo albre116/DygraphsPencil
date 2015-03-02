@@ -7,7 +7,7 @@ Authors@R: c(
     person("Mark", "Albrecht", role = c("aut","cre"),email="malbrech@nmdp.org"),
     person("Pradeep", "Bashyal", role = c("aut"),email = "pbashyal@nmdp.org"))
 Description: An R interface for a pencil input chart in dygraphs.
-License: LGPL3
+License: GPL3
 Depends:
     R (>= 3.0)
 Imports:
