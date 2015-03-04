@@ -15,12 +15,6 @@ devtools::install_github(c("ramnathv/htmlwidgets", "rstudio/dygraphs","albre116/
 If you have an xts-compatible time-series object creating an interactive plot where you can drag the mouse to alter the data is as simple as this:
 
 ```S
-library(dyPencilgraphs)
-library(datasets)
-library(xts)
-library(dplyr)
-library(dygraphs)
-ts <- ldeaths
 dyPencilgraph(ts, "Deaths from Lung Disease (UK)")
 ```
 
