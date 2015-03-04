@@ -1,6 +1,6 @@
 ### dyPencilgraphs for R
 
-The dyPencilgraphs extends the dygraphs package to do a simple function whereby you can input a curve using a pencil drawing tool.  This also binds the values of the curve to the input$variable of your shiny application.  The dygraphs javascript example from which this was constructed can be found under the [dygraphs gallery] (http://dygraphs.com/gallery/)
+The dyPencilgraphs extends the dygraphs package to do a simple function whereby you can input a curve using a pencil drawing tool.  This also binds the values of the curve to the input$variable of your shiny application.  The dygraphs javascript example from which this was constructed can be found under the [dygraphs gallery](http://dygraphs.com/gallery/)
 
 #### Installation
 
@@ -12,22 +12,28 @@ devtools::install_github(c("ramnathv/htmlwidgets", "rstudio/dygraphs","albre116/
 
 #### Usage
 
-If you have an xts-compatible time-series object creating an interactive plot of it is as simple as this:
+If you have an xts-compatible time-series object creating an interactive plot where you can drag the mouse to alter the data is as simple as this:
 
 ```S
-dygraph(nhtemp, main = "New Haven Temperatures")
+library(dyPencilgraphs)
+library(datasets)
+library(xts)
+library(dplyr)
+library(dygraphs)
+ts <- ldeaths
+dyPencilgraph(ts, "Deaths from Lung Disease (UK)")
 ```
 
-You can also further customize axes and series display as well as add interacitve features like a range selector:
+You can also further customize axes and series display as well as add interacitve features like a range selector.  As a note, with dyPencilGraphs you can only plot 1 series:
 
 ```S
-dygraph(nhtemp, main = "New Haven Temperatures") %>%
-  dyAxis("y", label = "Temp (F)", valueRange = c(40, 60)) %>%
-  dyOptions(fillGraph = TRUE, drawGrid = FALSE) %>%
-  dyRangeSelector()
+    dyPencilgraph(ts, "Deaths from Lung Disease (UK)") %>%  ###you can only do 1 series or it will fail
+      dySeries("V1","Deaths",fillGraph=T) %>%
+      dyAxis("y",valueRange=c(min(ts),max(ts))) %>% ###you must specify the y values range or it will fail
+      dyRangeSelector()
 ```
 
-See the [online documentation](http://rstudio.github.io/dygraphs) for the dygraphs package for additional details and examples.
+See the [dygraphs gallery](http://dygraphs.com/gallery/) for the dygraphs package for additional details and examples.
 
 
 
