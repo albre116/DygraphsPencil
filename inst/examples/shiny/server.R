@@ -1,6 +1,8 @@
 library(dyPencilgraphs)
 library(datasets)
 library(xts)
+library(dplyr)
+library(dygraphs)
 
 shinyServer(function(input, output) {
   
