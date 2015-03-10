@@ -3,12 +3,22 @@ library(datasets)
 library(xts)
 library(dplyr)
 library(dygraphs)
+library(shiny)
 
 shinyServer(function(input, output) {
   
   ts <- ldeaths
   
+  TS <- reactive({
+  ts <- ts+input$tslevel  
+  return(ts)
+  })
+
+  
+
+  
   output$dyPencilgraph <- renderdyPencilgraph({
+    ts <- TS()
     dyPencilgraph(ts, "Deaths from Lung Disease (UK)") %>%  ###you can only do 1 series or it will fail
       dySeries("V1","Deaths",fillGraph=T) %>%
       dyAxis("y",valueRange=c(min(ts),max(ts))) %>% ###you must specify the y values range or it will fail
@@ -29,8 +39,8 @@ shinyServer(function(input, output) {
   
   output$datas <- renderDataTable({
     if(input$updateTable==0){
-      p <- as.numeric(time(ts))
-      pp <- as.numeric(ts)
+      p <- as.numeric(time(TS()))
+      pp <- as.numeric(TS())
       out <- data.frame("V1"=as.POSIXct(p,format="%Y",origin = "1970-01-01"),"V2"=pp)
       return(out)
     }

@@ -78,11 +78,11 @@ HTMLWidgets.widget({
     if (this.queryVar("viewer_pane") === "1")
       document.body.style.fontFamily = "Arial, sans-serif";
     
-    if (instance.dygraph) { // update existing instance
+    //if (instance.dygraph) { // update existing instance
        
-      instance.dygraph.updateOptions(attrs);
+    //instance.dygraph.updateOptions(attrs);
     
-    } else {  // create new instance
+    //} else {  // create new instance
       
       // add shiny input for date window
       if (HTMLWidgets.shinyMode){
@@ -227,7 +227,7 @@ HTMLWidgets.widget({
       instance.dygraph = new Dygraph(el, attrs.file, attrs);
       if (x.group != null)
         this.groups[x.group].push(instance.dygraph);
-    }
+    //}
      
     // set annotations
     if (x.annotations != null) {
