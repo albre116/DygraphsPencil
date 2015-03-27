@@ -577,7 +577,7 @@ HTMLWidgets.widget({
     
     // install the callback
     x.attrs.drawCallback = function(me, initial) {
-      console.log("we are here at addNrowNcolShinyInput");
+      //console.log("we are here at addNrowNcolShinyInput");
       
       // call existing
       if (prevDrawCallback)
