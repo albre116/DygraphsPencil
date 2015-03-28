@@ -47,4 +47,38 @@ shinyServer(function(input, output) {
   })
   
   
+  
+  output$dynamic_tables <- renderUI({
+    # Call renderPlot for each one. Plots are only actually generated when they
+    # are visible on the web page.
+    for (i in 1:input$plotNum) {
+      # Need local so that each item gets its own number. Without it, the value
+      # of i in the renderPlot() will be the same across all instances, because
+      # of when the expression is evaluated.
+      local({
+        my_i <- i
+        plotname <- paste("plot", my_i, sep="")
+        grob <- paste0(plotname,"_data_extract")
+        data <- input[[grob]]
+        grob <- paste0(plotname,"_data_dimension_RowCol")
+        dimension <-input[[grob]]
+        data <- matrix(data,nrow=dimension[[1]],ncol=dimension[[2]],byrow = T)
+        plotname <- paste("table", my_i, sep="")
+        output[[plotname]] <- DT::renderDataTable({
+          datatable(data)
+
+        })
+      })
+    }
+    
+    plot_output_list <- lapply(1:input$plotNum, function(i) {
+      plotname <- paste("table", i, sep="")
+      DT::dataTableOutput(plotname)
+    })
+    # Convert the list to a tagList - this is necessary for the list of items
+    # to display properly.
+    do.call(tagList, plot_output_list)
+  })
+  
+  
 })
