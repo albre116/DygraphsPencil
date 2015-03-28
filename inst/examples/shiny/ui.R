@@ -1,16 +1,15 @@
 library(dyPencilgraphs)
+library(shiny)
+library(DT)
 
 shinyUI(fluidPage(
     fluidRow(
       column(2,
              sliderInput("tslevel",label = "constant to add to time series",min=0,max=1000,value = 0),
-             div(strong("From: "), textOutput("from", inline = TRUE)),
-             div(strong("To: "), textOutput("to", inline = TRUE)),
-             actionButton("updateTable","Click to Refresh Data Table")
+             sliderInput("plotNum","Number of Plots",2,step=1,max=5,min=1)
              ),
       column(10,
-             dyPencilgraphOutput("dyPencilgraph"),
-             div(strong("Data: "),dataTableOutput("datas"))
+             uiOutput("dynamic_plots")
         )
     )
 ))

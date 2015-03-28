@@ -17,39 +17,34 @@ shinyServer(function(input, output) {
   
 
   
-  output$dyPencilgraph <- renderdyPencilgraph({
+  output$dynamic_plots <- renderUI({
     ts <- TS()
-    dyPencilgraph(ts, "Deaths from Lung Disease (UK)") %>%  ###you can only do 1 series or it will fail
-      dySeries("V1","Deaths",fillGraph=T) %>%
-      dyAxis("y",valueRange=c(min(ts),max(ts))) %>% ###you must specify the y values range or it will fail
-      dyRangeSelector()
-    
-    
-  })
-  
-  output$from <- renderText({
-    if (!is.null(input$dyPencilgraph_date_window))
-      strftime(input$dyPencilgraph_date_window[[1]], "%d %b %Y")      
-  })
-  
-  output$to <- renderText({
-    if (!is.null(input$dyPencilgraph_date_window))
-      strftime(input$dyPencilgraph_date_window[[2]], "%d %b %Y")
-  })
-  
-  output$datas <- renderDataTable({
-    if(input$updateTable==0){
-      p <- as.numeric(time(TS()))
-      pp <- as.numeric(TS())
-      out <- data.frame("V1"=as.POSIXct(p,format="%Y",origin = "1970-01-01"),"V2"=pp)
-      return(out)
+    # Call renderPlot for each one. Plots are only actually generated when they
+    # are visible on the web page.
+    for (i in 1:input$plotNum) {
+      # Need local so that each item gets its own number. Without it, the value
+      # of i in the renderPlot() will be the same across all instances, because
+      # of when the expression is evaluated.
+      local({
+        my_i <- i
+        plotname <- paste("plot", my_i, sep="")
+        output[[plotname]] <- renderdyPencilgraph({
+          dyPencilgraph(ts, "Deaths from Lung Disease (UK)") %>%  ###you can only do 1 series or it will fail
+            dySeries("V1","Deaths",fillGraph=T) %>%
+            dyAxis("y",valueRange=c(min(ts),max(ts))) %>% ###you must specify the y values range or it will fail
+            dyRangeSelector()
+        })
+      })
     }
-    raw <- isolate(input$dyPencilgraph_data_extract)
-    dimension <- isolate(input$dyPencilgraph_data_dimension_RowCol)
-    out <- matrix(raw,nrow=dimension[[1]],ncol=dimension[[2]],byrow = T)
-    out <- as.data.frame(out)
-    return(out)
     
+    plot_output_list <- lapply(1:input$plotNum, function(i) {
+      plotname <- paste("plot", i, sep="")
+      dyPencilgraphOutput(plotname)
+    })
+    # Convert the list to a tagList - this is necessary for the list of items
+    # to display properly.
+    do.call(tagList, plot_output_list)
   })
+  
   
 })
